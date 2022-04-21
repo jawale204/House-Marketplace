@@ -104,6 +104,12 @@ button {
   }
 }
 
+.compressed {
+  padding-top: 20px;
+  margin: auto;
+  max-width: 50rem;
+}
+
 .loadingSpinnerContainer {
   position: fixed;
   top: 0;
@@ -137,6 +143,7 @@ button {
 .pageHeader {
   font-size: 2rem;
   font-weight: 800;
+  padding: 20px 0px 20px 0px;
 }
 
 .navbar {
