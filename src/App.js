@@ -5,6 +5,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Offers from "./pages/Offers";
+import Navbar from "./components/Navbar";
 function App() {
   return (
     <>
@@ -19,10 +20,10 @@ function App() {
             path="/forgotpassword"
             element={<ForgotPassword />}
           ></Route>
-          <Route exact path="/profile" element={<Profile />}></Route>
+          <Route exact path="/profile" element={<SignUp />}></Route>
         </Routes>
+        <Navbar />
       </BrowserRouter>
-      <h1>hello world</h1>
     </>
   );
 }
