@@ -9,6 +9,7 @@ function Navbar() {
   const location = useLocation();
 
   const checkLocation = (path) => {
+    console.log(location.pathname, path);
     if (location.pathname === path) {
       return true;
     } else {
