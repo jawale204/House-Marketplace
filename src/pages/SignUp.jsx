@@ -8,6 +8,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { db } from "../firebase.config";
+import { doc, sectDoc, serverTimestamp, setDoc } from "firebase/firestore";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -41,6 +42,10 @@ function SignUp() {
       updateProfile(user, {
         displayName: name,
       });
+      var formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
 
       navigator("/");
     } catch (error) {
