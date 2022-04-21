@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import visibility from "../assets/svg/visibilityIcon.svg";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
 
 function SignIn() {
   const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ function SignIn() {
         navigator("/Profile");
       }
     } catch (error) {
+      toast.error("Wrong credentioals");
       console.log(error);
     }
   };

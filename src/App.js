@@ -6,6 +6,8 @@ import SignIn from "./pages/SignIn";
 import Offers from "./pages/Offers";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <>
@@ -23,6 +25,7 @@ function App() {
           <Route exact path="/profile" element={<Profile />}></Route>
         </Routes>
         <Navbar />
+        <ToastContainer />
       </BrowserRouter>
     </>
   );

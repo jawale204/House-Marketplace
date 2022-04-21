@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { db } from "../firebase.config";
 import { doc, sectDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -49,6 +50,7 @@ function SignUp() {
 
       navigator("/");
     } catch (error) {
+      toast.error("Something went wrong");
       console.log(error);
     }
   };
