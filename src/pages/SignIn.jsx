@@ -17,6 +17,11 @@ function SignIn() {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(email, password);
+  };
+
   return (
     <>
       <div className="pageContainer compressed">
@@ -24,7 +29,7 @@ function SignIn() {
           <div className="pageHeader">Welcome Back</div>
         </header>
 
-        <form className="">
+        <form onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -49,7 +54,7 @@ function SignIn() {
               onClick={() => setShowPassword(!showPassword)}
             ></img>
           </div>
-          <Link to="/forget-password" className="forgotPasswordLink">
+          <Link to="/forgot-password" className="forgotPasswordLink">
             Forgot Password
           </Link>
           <div className="signUpBar">
