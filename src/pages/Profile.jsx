@@ -30,7 +30,7 @@ function Profile() {
     }
   };
   const updateProfileDetails = async () => {
-    if (auth.currentUser.displayName != name) {
+    if (auth.currentUser.displayName !== name) {
       try {
         await updateProfile(auth.currentUser, {
           displayName: name,

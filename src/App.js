@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PrivateRoute } from "./components/PrivateRoute";
 function App() {
   return (
     <>
@@ -22,7 +23,9 @@ function App() {
             path="/forgot-password"
             element={<ForgotPassword />}
           ></Route>
-          <Route exact path="/profile" element={<Profile />}></Route>
+          <Route path="/profile" element={<PrivateRoute />}>
+            <Route exact path="/profile" element={<Profile />}></Route>
+          </Route>
         </Routes>
         <Navbar />
         <ToastContainer />
