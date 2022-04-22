@@ -32,7 +32,7 @@ function SignIn() {
       );
 
       if (userCredentials.user) {
-        navigator("/Profile");
+        navigator("/");
       }
     } catch (error) {
       toast.error("Wrong credentioals");

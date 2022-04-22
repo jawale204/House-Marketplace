@@ -5,19 +5,25 @@ import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const auth = getAuth();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    name: auth.currentUser.displayName,
+    email: auth.currentUser.email,
+  });
   const navigator = useNavigate();
-  useEffect(() => {
-    if (auth.currentUser) {
-      setUser(auth.currentUser);
-    } else {
-      navigator("/sign-in");
-    }
-  }, [auth.currentUser]);
-  return user == null ? (
-    <div>Not Logged in</div>
-  ) : (
-    <div>{user.displayName}</div>
+
+  const onLogout = async () => {
+    await auth.signOut();
+    navigator("/");
+  };
+  return (
+    <div className="profile">
+      <div className="profileHeader">
+        <p className="pageHeader">MyProfile</p>
+        <button className="logOut" onClick={onLogout}>
+          logout
+        </button>
+      </div>
+    </div>
   );
 }
 
