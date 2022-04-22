@@ -35,7 +35,7 @@ function SignIn() {
         navigator("/");
       }
     } catch (error) {
-      toast.error("Wrong credentioals");
+      toast.error("Wrong credentials");
       console.log(error);
     }
   };

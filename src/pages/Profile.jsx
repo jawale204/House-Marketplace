@@ -62,7 +62,7 @@ function Profile() {
   return (
     <div className="profile compressed">
       <header className="profileHeader">
-        <p className="pageHeader">MyProfile</p>
+        <p className="pageHeader">My Profile</p>
         <button className="logOut" onClick={onLogout}>
           logout
         </button>
