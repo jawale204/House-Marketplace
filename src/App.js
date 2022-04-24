@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PrivateRoute } from "./components/PrivateRoute";
+import Category from "./pages/Category";
 function App() {
   return (
     <>
@@ -16,6 +17,11 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Explore />}></Route>
           <Route exact path="/offers" element={<Offers />}></Route>
+          <Route
+            exact
+            path="/category/:categoryName"
+            element={<Category />}
+          ></Route>
           <Route exact path="/sign-in" element={<SignIn />}></Route>
           <Route exact path="/sign-up" element={<SignUp />}></Route>
           <Route
