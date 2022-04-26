@@ -11,6 +11,7 @@ import {
 import { db } from "../firebase.config";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import ListingItem from "../components/ListingItem";
 
 function Category() {
   const [listings, setlistings] = useState();
@@ -54,10 +55,13 @@ function Category() {
       ) : listings.length > 0 ? (
         <>
           <main>
-            '
             <ul className="categoryListings">
               {listings.map((listing) => (
-                <h3 key={listing.id}>{listing.data.name}</h3>
+                <ListingItem
+                  key={listing.id}
+                  listing={listing.data}
+                  id={listing.id}
+                />
               ))}
             </ul>
           </main>
