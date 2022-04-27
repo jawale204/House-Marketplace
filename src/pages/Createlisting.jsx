@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { getAuth } from "firebase/auth";
+import Spinner from "../components/Spinner";
 function Createlisting() {
   const isMounted = useRef(true);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     bathrooms: 1,
@@ -25,6 +27,10 @@ function Createlisting() {
       isMounted.current = false;
     };
   }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
   return <div>Createlisting</div>;
 }
 
