@@ -50,7 +50,34 @@ function Createlisting() {
     e.preventDefault();
   };
 
-  const onMutate = () => {};
+  const onMutate = (e) => {
+    let boolean = null;
+
+    if (e.target.value === "true") {
+      boolean = true;
+    }
+    if (e.target.value === "false") {
+      boolean = false;
+    }
+
+    if (e.target.files) {
+      setFormData((prev) => ({
+        ...prev,
+        imageUrls: e.target.files,
+      }));
+    }
+
+    // if (e.target.id === "offer" && e.target.value === "false") {
+    //   console.log(e.target.id);
+    //   setFormData({ ...formData, discountedPrice: "0" });
+    // }
+    if (!e.target.files) {
+      setFormData((prev) => ({
+        ...formData,
+        [e.target.id]: boolean != null ? boolean : e.target.value,
+      }));
+    }
+  };
   if (loading) {
     return <Spinner />;
   }

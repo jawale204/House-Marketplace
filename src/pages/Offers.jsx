@@ -12,6 +12,7 @@ import { db } from "../firebase.config";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ListingItem from "../components/ListingItem";
+import Spinner from "../components/Spinner";
 
 function Offers() {
   const [listings, setlistings] = useState();
@@ -49,7 +50,7 @@ function Offers() {
         <p className="pageHeader">Offers</p>
       </header>
       {isLoading ? (
-        <div>Loading</div>
+        <Spinner />
       ) : listings.length > 0 ? (
         <>
           <main>
