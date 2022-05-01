@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 function Createlisting() {
   const isMounted = useRef(true);
   const [loading, setLoading] = useState(false);
+  const [geoLocationEnabled, setGeoLocationEnabled] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     bathrooms: 1,
@@ -11,11 +13,13 @@ function Createlisting() {
     discountedPrice: 0,
     regularPrice: 0,
     furnished: false,
-    imageUrls: [],
+    imageUrls: {},
     address: "",
     offer: false,
     parking: false,
     type: "rent",
+    lat: "",
+    long: "",
   });
 
   const {
@@ -30,6 +34,8 @@ function Createlisting() {
     offer,
     parking,
     type,
+    lat,
+    long,
   } = formData;
 
   useEffect(() => {
@@ -46,8 +52,50 @@ function Createlisting() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    if (discountedPrice >= regularPrice) {
+      setLoading(false);
+      toast.error("discounted price cannot be >= regularprice");
+      return;
+    }
+
+    if (imageUrls.length > 6) {
+      setLoading(false);
+      toast.error("max 6 files only");
+      return;
+    }
+
+    console.log(discountedPrice);
+
+    let geolocation = {};
+    let location;
+    if (geoLocationEnabled) {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
+      );
+
+      const data = await response.json();
+
+      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
+      geolocation.long = data.results[0]?.geometry.location.long ?? 0;
+
+      location =
+        data.status === "ZERO_RESULTS"
+          ? undefined
+          : data.results[0]?.formatted_address;
+
+      if (location === undefined || location.includes("undefined")) {
+        setLoading(false);
+        toast.error("invalid address");
+      }
+    } else {
+      geolocation.lat = lat;
+      geolocation.long = long;
+      location = address;
+    }
   };
 
   const onMutate = (e) => {
@@ -67,10 +115,6 @@ function Createlisting() {
       }));
     }
 
-    // if (e.target.id === "offer" && e.target.value === "false") {
-    //   console.log(e.target.id);
-    //   setFormData({ ...formData, discountedPrice: "0" });
-    // }
     if (!e.target.files) {
       setFormData((prev) => ({
         ...formData,
@@ -78,6 +122,7 @@ function Createlisting() {
       }));
     }
   };
+
   if (loading) {
     return <Spinner />;
   }
@@ -271,6 +316,31 @@ function Createlisting() {
           multiple
           required
         />
+        {!geoLocationEnabled && (
+          <>
+            <label className="formLabel">Geo location</label>
+            <div className="formRooms">
+              <label className="formLabel">Latitude</label>
+              <input
+                type="text"
+                className="formInputName"
+                id="lat"
+                name="lat"
+                value={lat}
+                onChange={onMutate}
+              />
+              <label className="formLabel">Longitude</label>
+              <input
+                type="text"
+                className="formInputName"
+                id="long"
+                name="long"
+                value={long}
+                onChange={onMutate}
+              />
+            </div>
+          </>
+        )}
         <button type="submit" className="primaryButton createListingButton">
           Create Listing
         </button>
