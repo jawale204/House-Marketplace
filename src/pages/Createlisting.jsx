@@ -8,7 +8,10 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidV4 } from "uuid";
+import { useNavigate } from "react-router-dom";
+import { db } from "../firebase.config";
 function Createlisting() {
   const isMounted = useRef(true);
   const [loading, setLoading] = useState(false);
@@ -20,7 +23,7 @@ function Createlisting() {
     discountedPrice: 0,
     regularPrice: 0,
     furnished: false,
-    imageUrls: {},
+    imgUrls: {},
     address: "",
     offer: false,
     parking: false,
@@ -36,7 +39,7 @@ function Createlisting() {
     discountedPrice,
     regularPrice,
     furnished,
-    imageUrls,
+    imgUrls,
     address,
     offer,
     parking,
@@ -45,6 +48,7 @@ function Createlisting() {
     long,
   } = formData;
   const auth = getAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     if (isMounted.current) {
       onAuthStateChanged(auth, (user) => {
@@ -68,7 +72,7 @@ function Createlisting() {
       return;
     }
 
-    if (imageUrls.length > 6) {
+    if (imgUrls.length > 6) {
       setLoading(false);
       toast.error("max 6 files only");
       return;
@@ -105,7 +109,7 @@ function Createlisting() {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
         const filename = `${auth.currentUser.uid} ${image.name} ${uuidV4()}`;
-        const storageRef = ref(storage, `image/` + filename);
+        const storageRef = ref(storage, `images/` + filename);
 
         const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -126,17 +130,30 @@ function Createlisting() {
     };
 
     const urls = await Promise.all(
-      [...imageUrls].map((image) => storeImage(image))
-    )
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        toast.error("Images not uploaded");
-        return;
-      })
-      .then(() => {
-        toast.success("Images uploaded");
-      });
+      [...imgUrls].map((image) => storeImage(image))
+    ).catch((error) => {
+      console.log(error);
+      setLoading(false);
+      toast.error("Images not uploaded");
+      return;
+    });
+
+    let formDataCopy = {
+      ...formData,
+      geolocation,
+      imageUrls: urls,
+      timestamp: serverTimestamp(),
+    };
+
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    delete formDataCopy.address;
+    delete formDataCopy.imgUrls;
+    formDataCopy.location = address;
+
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+    setLoading(false);
+    toast.success("listing created");
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
   const onMutate = (e) => {
@@ -152,7 +169,7 @@ function Createlisting() {
     if (e.target.files) {
       setFormData((prev) => ({
         ...prev,
-        imageUrls: e.target.files,
+        imgUrls: e.target.files,
       }));
     }
 

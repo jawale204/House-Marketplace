@@ -8,7 +8,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { db } from "../firebase.config";
-import { doc, sectDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import OAuth from "../components/OAuth";
 
