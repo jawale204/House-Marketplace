@@ -327,6 +327,7 @@ function Createlisting() {
                 id="lat"
                 name="lat"
                 value={lat}
+                required
                 onChange={onMutate}
               />
               <label className="formLabel">Longitude</label>
@@ -336,6 +337,7 @@ function Createlisting() {
                 id="long"
                 name="long"
                 value={long}
+                required
                 onChange={onMutate}
               />
             </div>
