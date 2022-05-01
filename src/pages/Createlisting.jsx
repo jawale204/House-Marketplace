@@ -2,6 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { v4 as uuidV4 } from "uuid";
 function Createlisting() {
   const isMounted = useRef(true);
   const [loading, setLoading] = useState(false);
@@ -37,10 +44,9 @@ function Createlisting() {
     lat,
     long,
   } = formData;
-
+  const auth = getAuth();
   useEffect(() => {
     if (isMounted.current) {
-      const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setFormData({ ...formData, userRef: user.uid });
@@ -68,8 +74,6 @@ function Createlisting() {
       return;
     }
 
-    console.log(discountedPrice);
-
     let geolocation = {};
     let location;
     if (geoLocationEnabled) {
@@ -96,6 +100,43 @@ function Createlisting() {
       geolocation.long = long;
       location = address;
     }
+
+    const storeImage = async (image) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage();
+        const filename = `${auth.currentUser.uid} ${image.name} ${uuidV4()}`;
+        const storageRef = ref(storage, `image/` + filename);
+
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {},
+          (error) => {
+            console.log(image);
+            reject(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
+          }
+        );
+      });
+    };
+
+    const urls = await Promise.all(
+      [...imageUrls].map((image) => storeImage(image))
+    )
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+        toast.error("Images not uploaded");
+        return;
+      })
+      .then(() => {
+        toast.success("Images uploaded");
+      });
   };
 
   const onMutate = (e) => {
