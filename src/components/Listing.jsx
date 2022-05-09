@@ -89,7 +89,7 @@ function Listing() {
         </ul>
         {auth.currentUser?.uid !== listing.userRef && (
           <Link
-            to={`/contact/${auth.currentUser.uid}/?${params.listingId}`}
+            to={`/contact/${auth.currentUser.uid}?listingName=${listing.name}`}
             className="primaryButton"
           >
             Contact owner

@@ -12,6 +12,7 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import Category from "./pages/Category";
 import Createlisting from "./pages/Createlisting";
 import Listing from "./components/Listing";
+import Contact from "./pages/Contact";
 function App() {
   return (
     <>
@@ -46,6 +47,7 @@ function App() {
             path="/category/:categoryName/:listingId"
             element={<Listing />}
           ></Route>
+          <Route path={`/contact/:UserId`} element={<Contact />}></Route>
         </Routes>
         <Navbar />
         <ToastContainer />
