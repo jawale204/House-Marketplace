@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import shareIcon from "../assets/svg/shareIcon.svg";
 import { getAuth } from "firebase/auth";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 function Listing() {
   const [listing, setListing] = useState();
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,6 @@ function Listing() {
       const docRef = doc(db, "listings", params.listingId);
       const docSnapShot = await getDoc(docRef);
       if (docSnapShot.exists()) {
-        console.log(docSnapShot.data());
         setListing(docSnapShot.data());
         setLoading(false);
       } else {
@@ -28,6 +28,7 @@ function Listing() {
       }
     };
     getListing();
+    return () => {};
   }, [params.listingId]);
 
   if (loading) {
@@ -87,6 +88,25 @@ function Listing() {
           <li>{listing.parking && "Parking Spot"}</li>
           <li>{listing.furnished && "Furnished"}</li>
         </ul>
+        <div className="leafletContainer">
+          <MapContainer
+            center={[listing.geolocation.lat, listing.geolocation.lng]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ></TileLayer>
+            <Marker
+              position={[listing.geolocation.lat, listing.geolocation.lng]}
+            >
+              <Popup>{listing.location}</Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+
         {auth.currentUser?.uid !== listing.userRef && (
           <Link
             to={`/contact/${auth.currentUser.uid}?listingName=${listing.name}`}
